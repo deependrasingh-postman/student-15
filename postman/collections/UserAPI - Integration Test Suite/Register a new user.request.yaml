@@ -1,0 +1,33 @@
+$kind: http-request
+method: POST
+url: '{{baseUrl}}/v1/users/register'
+order: 1000
+headers:
+  Content-Type: application/json
+scripts:
+  - type: beforeRequest
+    language: text/javascript
+    code: |-
+      const username = pm.variables.replaceIn('{{$randomUserName}}');
+      const password = pm.variables.replaceIn('{{$randomPassword}}');
+
+      pm.collectionVariables.set('username', username);
+      pm.collectionVariables.set('password', password);
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 201', function () {
+        pm.response.to.have.status(201);
+      });
+
+      if (pm.response.code === 201) {
+        const response = pm.response.json();
+        pm.collectionVariables.set('id', response.id);
+      }
+body:
+  type: json
+  content: |-
+    {
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }

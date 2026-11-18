@@ -1,0 +1,20 @@
+$kind: http-request
+method: POST
+url: '{{baseUrl}}/v1/users/login'
+order: 2000
+headers:
+  Content-Type: application/json
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 200', function () {
+        pm.response.to.have.status(200);
+      });
+body:
+  type: json
+  content: |-
+    {
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }

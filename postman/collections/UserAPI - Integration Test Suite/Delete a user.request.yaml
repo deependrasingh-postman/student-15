@@ -1,0 +1,14 @@
+$kind: http-request
+method: DELETE
+url: '{{baseUrl}}/v1/users/:id'
+order: 5000
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test('Status code is 200', function () {
+        pm.response.to.have.status(200);
+      });
+pathVariables:
+  - key: id
+    value: '{{id}}'
